@@ -18,7 +18,10 @@
         },
         template: {
             path: './js/template/execution_mas/',
-            needs: ['po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'resultOutput']
+            needs: [
+                'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
+                'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input'
+            ]
         }
     }
 
@@ -55,22 +58,6 @@
             })
         },
         bindEventHub() {
-        },
-        zipFileAndDownload(fileList, table) {
-            let zip = new JSZip()
-
-                fileList.forEach(file => {
-                    let folder = zip.folder(file.pathMeta.join('/'))
-                    folder.file(file.name, file.template)
-                })
-
-                zip.generateAsync({ type: "blob" })
-                .then(function (content) {
-                    saveData.setDataConver({
-                        name: `${table.code}.zip`,
-                        data: content
-                    })
-                });
         },
         table2TemplateCode(table) {
             let fileList = []
@@ -116,13 +103,23 @@
             return converter[_name](table)
         },
         fileNameConverter(_name, table) {
+            // 1. 大小写
             if (_name.endsWith('o')) {
                 _name = _name.toUpperCase()
             } else {
                 _name = $.firstUpperCase(_name)
             }
 
-            return `${$.firstUpperCase($.toCamelCase(table.code))}${_name}.java`
+            // 2. 文件名规则
+            let fileName = ''
+            if (!_name.includes('_')) {
+                fileName = `${$.firstUpperCase($.toCamelCase(table.code))}${_name}.java`
+            } else {
+                let nameMeta = _name.split('_')
+                fileName = `${nameMeta[0]}${$.firstUpperCase($.toCamelCase(table.code))}${nameMeta[1]}.java`
+            }
+
+            return fileName
         },
         parseText(text) {
             let type = text.split('\n')[0].trim().substring(3)

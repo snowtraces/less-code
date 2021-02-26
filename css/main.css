@@ -108,4 +108,6 @@ a {
 .data-ctrl > select.file-name {
     padding: 0 5px;
     height: 30px;
+    border: 1px solid;
+    margin-right: 10px;
 }

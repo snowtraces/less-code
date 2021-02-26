@@ -1,8 +1,15 @@
-const ge_po = (table) => {
+const ge_updateEnabledFlag_Input = (table) => {
     let base_package = 'com.winning.execution.mdm.service'
     let package = table.code.replaceAll('_', '').toLowerCase()
+
+    // 表名
     let camelName = $.toCamelCase(table.code)
     let firstUpperCamelName = $.firstUpperCase(camelName)
+
+    // 主键
+    let pk = table.primaryKey
+    let pkCamelName = $.toCamelCase(pk)
+    let pkFirstUpperCamelName = $.firstUpperCase(pkCamelName)
 
     let attrText = table.attrs.map(attr => {
         return `    /**
@@ -14,16 +21,13 @@ const ge_po = (table) => {
     }).join('\n')
     
 
-    let template = `package ${base_package}.entity.${package};
+    let template = `package ${base_package}.dto.${package};
 
-import ${base_package}.BaseEntity;
+import com.winning.execution.mdm.common.constants.BaseGetRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author: CHENG
@@ -32,10 +36,17 @@ import javax.persistence.Table;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "${table.code}")
-public class ${firstUpperCamelName}PO extends BaseEntity {
-${attrText}
+public class UpdateEnabledFlag${firstUpperCamelName}Input extends BaseGetRequest {
+    /**
+     * ${table.name}标识
+     */
+    @NotNull
+    private Long ${pkCamelName};
+
+    /**
+     * 启用标志
+     */
+    private Long enabledFlag;
 }
     `
     return template

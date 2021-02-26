@@ -32,7 +32,7 @@ public class ${firstUpperCamelName}ResultOutput {
     public String errorMessage;
 
     /**
-     * 危急值活动标识
+     * ${table.name}标识
      */
     private Long ${pkCamelName};
 }

@@ -1,4 +1,4 @@
-const ge_po = (table) => {
+const ge_query_Input = (table) => {
     let base_package = 'com.winning.execution.mdm.service'
     let package = table.code.replaceAll('_', '').toLowerCase()
     let camelName = $.toCamelCase(table.code)
@@ -12,18 +12,12 @@ const ge_po = (table) => {
     private ${attr.javaType} ${$.toCamelCase(attr.code)};
    `
     }).join('\n')
-    
 
-    let template = `package ${base_package}.entity.${package};
+    let template = `package ${base_package}.dto.${package};
 
-import ${base_package}.BaseEntity;
+import com.winning.execution.mdm.common.constants.BaseGetRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * @author: CHENG
@@ -32,9 +26,7 @@ import javax.persistence.Table;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "${table.code}")
-public class ${firstUpperCamelName}PO extends BaseEntity {
+public class Query${firstUpperCamelName}Input extends BaseGetRequest {
 ${attrText}
 }
     `

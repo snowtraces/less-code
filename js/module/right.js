@@ -1,7 +1,11 @@
 {
     let view = {
         el: '#right',
-        template: `<div class="data-ctrl"><select class="file-name"></select></div>
+        template: `
+        <div class="data-ctrl">
+            <select class="file-name"></select>
+            <button id="downloadAll">下载</button>
+        </div>
         <div class="data-in">
             <textarea spellcheck="false" name="ge-result" id="ge-result"></textarea>
         </div>`,
@@ -29,6 +33,16 @@
                 $.el('#ge-result').value = file.template
             })
 
+            $.bindEvent('#downloadAll', 'click', () => {
+                let fileList = Object.values(this.model.typeToFileMap)
+                let size = fileList.length
+                if (size) {
+                    this.zipFileAndDownload(fileList)
+                } else {
+                    $.errorMsg('请先点击生成')
+                }
+            })
+
         },
         bindEventHub() {
             window.eventHub.on('onCodeReady', (fileList) => {
@@ -52,7 +66,22 @@
                 $.el('#ge-result').value = file.template
 
             })
-        }
+        },
+        zipFileAndDownload(fileList) {
+            let zip = new JSZip()
+                fileList.forEach(file => {
+                    let folder = zip.folder(file.pathMeta.join('/'))
+                    folder.file(file.name, file.template)
+                })
+
+                zip.generateAsync({ type: "blob" })
+                .then(function (content) {
+                    saveData.setDataConver({
+                        name: `${ fileList[0].name}.zip`,
+                        data: content
+                    })
+                });
+        },
     }
 
     controller.init(view, model)

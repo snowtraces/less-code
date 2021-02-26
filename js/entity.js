@@ -5,8 +5,8 @@ class Attribute {
         this.code = code
         this.length = length
         this.precision = precision
-        this.primary = Boolean(primary)
-        this.mandatory = Boolean(mandatory)
+        this.primary = primary === 'TRUE'
+        this.mandatory = primary === 'TRUE'
 
         // TODO javaType
         let javaType = null
