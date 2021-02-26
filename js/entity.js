@@ -56,3 +56,10 @@ class TemplateFile {
         this.template = template
     }
 }
+
+class Other {
+    constructor(fileName, content) {
+        this.fileName = fileName
+        this.content = content
+    }
+}

@@ -49,15 +49,43 @@
                 let fileList = this.table2TemplateCode(table)
                 log(fileList)
 
-                // 4. zip下载
-                // this.zipFileAndDownload(fileList, table)
+                // 4. 杂项生成
+                let others = this.geOthers(table)
+                others.forEach(other => {
+                    log(other.fileName)
+                    log(other.content)
+                })
 
                 // 5. 触发事件
                 window.eventHub.emit('onCodeReady', fileList)
-                
+
             })
         },
         bindEventHub() {
+        },
+        geOthers(table) {
+            let others = []
+
+            // 1. 表名静态变量
+            others.push(new Other(
+                'TableNameConst.java',
+                `public static final String ${table.code} = "${table.code}";`
+            ))
+
+            // 2. api路径
+            let apis = { save: '保存', delete: '删除', by_example: '多条件查询', enable: '启用', disable: '停用' }
+            others.push(new Other(
+                'ApiPathConstants.java',
+                `${
+                    Object.keys(apis).map(apiCode => `/**
+ * ${apis[apiCode]}${table.name}
+ */
+public static final String ${apiCode.toUpperCase()}_${table.code} = MdmConst.BASE_CONTEXT + "/${table.code.toLowerCase()}/${apiCode}";
+                    `).join('\n')
+                }`
+            ))
+
+            return others
         },
         table2TemplateCode(table) {
             let fileList = []
@@ -68,8 +96,8 @@
                 let fileName = this.fileNameConverter(need, table)
                 fileList.push(new TemplateFile(
                     need,
-                    fileName, 
-                    pathMeta, 
+                    fileName,
+                    pathMeta,
                     template))
             })
             return fileList
