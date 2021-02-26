@@ -86,7 +86,8 @@ a {
     transition: all .3s;
 }
 
-.data-ctrl > button:active {
+.data-ctrl > button:active, 
+.data-ctrl > button.active {
     background: #000000;
     color: #ffffff;
     transition: all .3s;
@@ -104,3 +105,7 @@ a {
     overflow: auto;
 }
 
+.data-ctrl > select.file-name {
+    padding: 0 5px;
+    height: 30px;
+}

@@ -7,6 +7,22 @@ class Attribute {
         this.precision = precision
         this.primary = Boolean(primary)
         this.mandatory = Boolean(mandatory)
+
+        // TODO javaType
+        let javaType = null
+        if (type.startsWith('numeric')) {
+            javaType = 'Long'
+        } else if (type.startsWith('smallint')) {
+            javaType = 'Integer'
+        } else if (type.startsWith('nvarchar')) {
+            javaType = 'String'
+        }
+
+        if (!javaType) {
+            $.errorMsg(`未知的数据类型：${type}`)
+        } else {
+            this.javaType = javaType
+        }
     }
 }
 
@@ -33,7 +49,8 @@ class Table {
 }
 
 class TemplateFile {
-    constructor(name, pathMeta, template) {
+    constructor(type, name, pathMeta, template) {
+        this.type = type
         this.name = name
         this.pathMeta = pathMeta
         this.template = template

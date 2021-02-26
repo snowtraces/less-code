@@ -5,12 +5,12 @@ const ge_po = (table) => {
     let firstUpperCamelName = $.firstUpperCase(camelName)
 
     let attrText = table.attrs.map(attr => {
-        return `        /**
-        * ${attr.name}
-        */
-       @Id
-       @Column(name = "${attr.code}")
-       private Long ${$.toCamelCase(attr.code)};
+        return `    /**
+     * ${attr.name}
+     */
+    @Id
+    @Column(name = "${attr.code}")
+    private ${attr.javaType} ${$.toCamelCase(attr.code)};
    `
     }).join('\n')
     

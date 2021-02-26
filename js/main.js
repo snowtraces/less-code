@@ -6,6 +6,8 @@ let jsList = [
 
     './js/entity.js',
     './js/module/home.js',
+    './js/module/left.js',
+    './js/module/right.js',
 ]
 
 let developModel = true;
