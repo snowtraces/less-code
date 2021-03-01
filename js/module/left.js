@@ -20,7 +20,9 @@
             path: './js/template/execution_mas/',
             needs: [
                 'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
-                'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input'
+                'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input',
+                'rpcService', 'endPointImpl', 'save_InputDTO', 'query_OutputDTO', 'query_InputDTO', 'delete_InputDTO',
+                'resultOutputDTO', 'changeEnabledFlag_InputDTO'
             ]
         }
     }
