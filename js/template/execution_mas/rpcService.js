@@ -1,49 +1,22 @@
 const ge_rpcService = (table) => {
-    let base_package = 'com.winning.execution.mdm'
-    let resource = 'criticalvalue'
-    let package = table.code.replaceAll('_', '').toLowerCase()
-
-    // 表名
-    let camelName = $.toCamelCase(table.code)
-    let firstUpperCamelName = $.firstUpperCase(camelName)
-
-    // 主键
-    let pk = table.primaryKey
-    let pkCamelName = $.toCamelCase(pk)
-    let pkFirstUpperCamelName = $.firstUpperCase(pkCamelName)
-
-    let attrText = table.attrs.map(attr => {
-        return `    /**
-     * ${attr.name}
-     */${attr.primary ? '\n    @Id' : ''}
-    @Column(name = "${attr.code}")
-    private ${attr.javaType} ${$.toCamelCase(attr.code)};
-   `
-    }).join('\n')
-    
-    // TODO : resource
-    let template = `package ${base_package}.resource.api;
+    let template = `package ${base_package}.${scope.RESOURCE}.api;
 
 import com.winning.base.akso.rpc.WinRpcResponse;
 import com.winning.base.akso.tie.ApiTie;
 import com.winning.base.akso.tie.Domain;
 import com.winning.base.akso.tie.Ties;
-import com.winning.execution.mdm.common.api.constants.ApiPathConstants;
-import com.winning.execution.mdm.common.api.constants.MdmConst;
-import com.winning.execution.mdm.${resource}.dto.${package}.*;
+import ${base_package}.common.api.constants.ApiPathConstants;
+import ${base_package}.common.api.constants.MdmConst;
+import ${base_package}.${scope.RESOURCE}.dto.${table.lowerName}.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
-/**
- * @author: CHENG
- * @date: ${new Date().toLocaleDateString()}
- * @version 1.0
- */
+${annotation}
 @FeignClient(MdmConst.REGISTRY_SERVICE_NAME)
 @ApiTie(value = Ties.MDS, domain = Domain.EXE)
-public interface ${firstUpperCamelName}RpcService {
+public interface ${table.camelNameUpper}RpcService {
 
     /**
      * 保存${table.name}
@@ -52,7 +25,7 @@ public interface ${firstUpperCamelName}RpcService {
      * @return 保存结果
      */
     @PostMapping(ApiPathConstants.SAVE_${table.code})
-    WinRpcResponse<${firstUpperCamelName}ResultOutputDTO> save${firstUpperCamelName}(Save${firstUpperCamelName}InputDTO inputDTO);
+    WinRpcResponse<${table.camelNameUpper}ResultOutputDTO> save${table.camelNameUpper}(Save${table.camelNameUpper}InputDTO inputDTO);
 
     /**
      * 删除${table.name}入参
@@ -61,7 +34,7 @@ public interface ${firstUpperCamelName}RpcService {
      * @return 删除结果
      */
     @PostMapping(ApiPathConstants.DELETE_${table.code})
-    WinRpcResponse<${firstUpperCamelName}ResultOutputDTO> delete${firstUpperCamelName}(Delete${firstUpperCamelName}InputDTO inputDTO);
+    WinRpcResponse<${table.camelNameUpper}ResultOutputDTO> delete${table.camelNameUpper}(Delete${table.camelNameUpper}InputDTO inputDTO);
 
     /**
      * 多条件查询${table.name}信息
@@ -70,7 +43,7 @@ public interface ${firstUpperCamelName}RpcService {
      * @return ${table.name}信息
      */
     @PostMapping(ApiPathConstants.QUERY_${table.code}_BY_EXAMPLE)
-    WinRpcResponse<List<Query${firstUpperCamelName}OutputDTO>> query${firstUpperCamelName}ByExample(Query${firstUpperCamelName}InputDTO inputDTO);
+    WinRpcResponse<List<Query${table.camelNameUpper}OutputDTO>> query${table.camelNameUpper}ByExample(Query${table.camelNameUpper}InputDTO inputDTO);
 
     /**
      * 启用${table.name}
@@ -78,7 +51,7 @@ public interface ${firstUpperCamelName}RpcService {
      * @param inputDTO 启用状态入参
      */
     @PostMapping(ApiPathConstants.ENABLE_${table.code})
-    WinRpcResponse<${firstUpperCamelName}ResultOutputDTO> enable${firstUpperCamelName}(ChangeEnabledFlag${firstUpperCamelName}InputDTO inputDTO);
+    WinRpcResponse<${table.camelNameUpper}ResultOutputDTO> enable${table.camelNameUpper}(ChangeEnabledFlag${table.camelNameUpper}InputDTO inputDTO);
 
     /**
      * 禁用${table.name}
@@ -86,7 +59,7 @@ public interface ${firstUpperCamelName}RpcService {
      * @param inputDTO 禁用状态入参
      */
     @PostMapping(ApiPathConstants.DISABLE_${table.code})
-    WinRpcResponse<${firstUpperCamelName}ResultOutputDTO> disable${firstUpperCamelName}(ChangeEnabledFlag${firstUpperCamelName}InputDTO inputDTO);
+    WinRpcResponse<${table.camelNameUpper}ResultOutputDTO> disable${table.camelNameUpper}(ChangeEnabledFlag${table.camelNameUpper}InputDTO inputDTO);
 
 }
     `

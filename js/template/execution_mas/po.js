@@ -1,20 +1,5 @@
 const ge_po = (table) => {
-    let base_package = 'com.winning.execution.mdm.service'
-    let package = table.code.replaceAll('_', '').toLowerCase()
-    let camelName = $.toCamelCase(table.code)
-    let firstUpperCamelName = $.firstUpperCase(camelName)
-
-    let attrText = table.attrs.map(attr => {
-        return `    /**
-     * ${attr.name}
-     */${attr.primary ? '\n    @Id' : ''}
-    @Column(name = "${attr.code}")
-    private ${attr.javaType} ${$.toCamelCase(attr.code)};
-   `
-    }).join('\n')
-    
-
-    let template = `package ${base_package}.entity.${package};
+    let template = `package ${base_package}.${scope.SERVICE}.entity.${table.lowerName};
 
 import ${base_package}.BaseEntity;
 import lombok.Data;
@@ -25,17 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * @author: CHENG
- * @date: ${new Date().toLocaleDateString()}
- * @version 1.0
- */
+${annotation}
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "${table.code}")
-public class ${firstUpperCamelName}PO extends BaseEntity {
-${attrText}
+public class ${table.camelNameUpper}PO extends BaseEntity {
+${table.attrTextJpa}
 }
     `
     return template

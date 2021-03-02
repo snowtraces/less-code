@@ -1,27 +1,5 @@
 const ge_updateEnabledFlag_Input = (table) => {
-    let base_package = 'com.winning.execution.mdm.service'
-    let package = table.code.replaceAll('_', '').toLowerCase()
-
-    // 表名
-    let camelName = $.toCamelCase(table.code)
-    let firstUpperCamelName = $.firstUpperCase(camelName)
-
-    // 主键
-    let pk = table.primaryKey
-    let pkCamelName = $.toCamelCase(pk)
-    let pkFirstUpperCamelName = $.firstUpperCase(pkCamelName)
-
-    let attrText = table.attrs.map(attr => {
-        return `    /**
-     * ${attr.name}
-     */${attr.primary ? '\n    @Id' : ''}
-    @Column(name = "${attr.code}")
-    private ${attr.javaType} ${$.toCamelCase(attr.code)};
-   `
-    }).join('\n')
-    
-
-    let template = `package ${base_package}.dto.${package};
+    let template = `package ${base_package}.${scope.SERVICE}.dto.${table.lowerName};
 
 import com.winning.execution.mdm.common.constants.BaseGetRequest;
 import lombok.Data;
@@ -36,12 +14,12 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UpdateEnabledFlag${firstUpperCamelName}Input extends BaseGetRequest {
+public class UpdateEnabledFlag${table.camelNameUpper}Input extends BaseGetRequest {
     /**
      * ${table.name}标识
      */
     @NotNull
-    private Long ${pkCamelName};
+    private Long ${table.camelPk};
 
     /**
      * 启用标志

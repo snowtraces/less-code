@@ -22,7 +22,8 @@
                 'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
                 'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input',
                 'rpcService', 'endPointImpl', 'save_InputDTO', 'query_OutputDTO', 'query_InputDTO', 'delete_InputDTO',
-                'resultOutputDTO', 'changeEnabledFlag_InputDTO'
+                'resultOutputDTO', 
+                'changeEnabledFlag_InputDTO'
             ]
         }
     }
@@ -110,7 +111,7 @@ public static final String ${apiCode.toUpperCase()}_${table.code} = MdmConst.BAS
             let packageLine = funLines.filter(line => line.trim().startsWith('let template = `package '))[0]
             // let template = `package ${base_package}.repository;
             let path = packageLine.trim().replace('let template = `package ${base_package}.', '');
-            let pathMeta = path.split('.')
+            let pathMeta = this.singleCharSplit(path, '.', ['{', '}'])
             pathMeta = pathMeta.map(meta => {
                 if (meta.endsWith(';')) {
                     meta = meta.substring(0, meta.length - 1)
@@ -127,10 +128,66 @@ public static final String ${apiCode.toUpperCase()}_${table.code} = MdmConst.BAS
         },
         templateConverter(_name, table) {
             let converter = {
-                package: (table) => table.code.replaceAll('_', '').toLowerCase()
+                package: (table) => table.lowerName
             }
 
-            return converter[_name](table)
+            if (converter[_name]) {
+                return converter[_name](table)
+            } else {
+                let nameMeta = _name.split('.')
+                if (nameMeta[0] === 'table') {
+                    return table[nameMeta[1]]
+                }
+
+                let result = null
+                nameMeta.forEach(meta => {
+                    result = result ? result[meta] : config[meta]
+                })
+                return result
+            }
+        },
+        singleCharSplit(inString, dimiter, blockChars) {
+            let resultArray = [];
+            if (!inString) {
+                return resultArray;
+            }
+            let inBlock = false;
+            let lastChar = ''
+            let cache = []
+            for (let c of inString) {
+                if (blockChars && blockChars.includes(c)) {
+                    inBlock = !inBlock;
+                }
+
+                if (inBlock) {
+                    // 在块内，直接跳过
+                    cache.push(c);
+                } else {
+                    if (c === dimiter) {
+                        // 分隔符
+                        if ('\\' === lastChar) {
+                            // 被转义
+                            cache.push(c);
+                        } else {
+                            // 分割
+                            if (cache.length) {
+                                resultArray.push(cache.join(''));
+                                cache = [];
+                            }
+                        }
+                    } else {
+                        // 普通字符
+                        cache.push(c);
+                    }
+                }
+
+                lastChar = c;
+            }
+            if (cache.length) {
+                resultArray.push(cache.join(''))
+            }
+
+            return resultArray;
         },
         fileNameConverter(_name, table) {
             // 1. 大小写

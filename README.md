@@ -1,7 +1,7 @@
 # less-code
 ## todo list:
-- resource 配置化
-- base package 配置化
+- `完成` resource 配置化
+- `完成` base package 配置化
 - 模板可选择分组
 - 模板缓存、下载、上传
 - 模板抽象化配置

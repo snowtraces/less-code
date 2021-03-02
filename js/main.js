@@ -5,6 +5,8 @@ let jsList = [
     './js/3rdparty/jszip.min.js',
 
     './js/entity.js',
+    './js/config.js',
+    
     './js/module/home.js',
     './js/module/left.js',
     './js/module/right.js',

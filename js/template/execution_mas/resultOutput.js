@@ -1,17 +1,5 @@
 const ge_resultOutput = (table) => {
-    let base_package = 'com.winning.execution.mdm.service'
-    let package = table.code.replaceAll('_', '').toLowerCase()
-    
-    // 表名
-    let camelName = $.toCamelCase(table.code)
-    let firstUpperCamelName = $.firstUpperCase(camelName)
-
-    // 主键
-    let pk = table.primaryKey
-    let pkCamelName = $.toCamelCase(pk)
-    let pkFirstUpperCamelName = $.firstUpperCase(pkCamelName)
-
-    let template = `package ${base_package}.dto.${package};
+    let template = `package ${base_package}.${scope.SERVICE}.dto.${table.lowerName};
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ${firstUpperCamelName}ResultOutput {
+public class ${table.camelNameUpper}ResultOutput {
     /**
      * 操作结果
      */
@@ -34,7 +22,7 @@ public class ${firstUpperCamelName}ResultOutput {
     /**
      * ${table.name}标识
      */
-    private Long ${pkCamelName};
+    private Long ${table.camelPk};
 }
     `
     return template
