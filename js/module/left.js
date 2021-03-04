@@ -17,13 +17,31 @@
             KEY_SQL_DDL: 'SQL_DDL'
         },
         template: {
-            path: './js/template/execution_mas/',
+            // path: './js/template/execution_mas/',
+            // path: './js/template/execution_bmts_order/',
+            path: config.path,
             needs: [
-                'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
-                'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input',
-                'rpcService', 'endPointImpl', 'save_InputDTO', 'query_OutputDTO', 'query_InputDTO', 'delete_InputDTO',
-                'resultOutputDTO', 
-                'changeEnabledFlag_InputDTO'
+                // 'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
+                // 'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input',
+                // 'rpcService', 'endPointImpl', 'save_InputDTO', 'query_OutputDTO', 'query_InputDTO', 'delete_InputDTO',
+                // 'resultOutputDTO', 
+                // 'changeEnabledFlag_InputDTO'
+
+// 'deleteInputDto',
+// 'jpa',
+// 'po',
+// 'queryInputDto',
+// 'queryOutputDto',
+// 'repository',
+// 'repositoryImpl',
+// 'resultOutputDto',
+// 'rpcService',
+// 'rpcServiceImpl',
+// 'saveInputDto',
+// 'service',
+// 'serviceImpl',
+// 'vo'
+... config.needs
             ]
         }
     }
@@ -76,14 +94,15 @@
             ))
 
             // 2. api路径
-            let apis = { save: '保存', delete: '删除', by_example: '多条件查询', enable: '启用', disable: '停用' }
+            let apis = { save: '保存', delete: '删除', by_example: '多条件查询'}
             others.push(new Other(
                 'ApiPathConstants.java',
                 `${
                     Object.keys(apis).map(apiCode => `/**
  * ${apis[apiCode]}${table.name}
  */
-public static final String ${apiCode.toUpperCase()}_${table.code} = MdmConst.BASE_CONTEXT + "/${table.code.toLowerCase()}/${apiCode}";
+public static final String ${apiCode === 'by_example' ? 'QUERY_' : ''}${apiCode.toUpperCase()}_${table.code}_V1 = "/api/v1/execution/${table.code.toLowerCase()}/${apiCode}";
+public static final String ${apiCode === 'by_example' ? 'QUERY_' : ''}${apiCode.toUpperCase()}_${table.code}_V1_ID = "2130-xxxx-01";
                     `).join('\n')
                 }`
             ))
@@ -190,17 +209,13 @@ public static final String ${apiCode.toUpperCase()}_${table.code} = MdmConst.BAS
             return resultArray;
         },
         fileNameConverter(_name, table) {
-            // 1. 大小写
-            if (_name.endsWith('o')) {
-                _name = _name.toUpperCase()
-            } else {
-                _name = $.firstUpperCase(_name)
-            }
+            // 1. 首字母大写
+            _name = $.firstUpperCase(_name)
 
             // 2. 文件名规则
             let fileName = ''
             if (!_name.includes('_')) {
-                fileName = `${$.firstUpperCase($.toCamelCase(table.code))}${_name}.java`
+                fileName = `${$.firstUpperCase($.toCamelCase(table.code))}${_name === 'Po' ? '' : _name}.java`
             } else {
                 let nameMeta = _name.split('_')
                 fileName = `${nameMeta[0]}${$.firstUpperCase($.toCamelCase(table.code))}${nameMeta[1]}.java`

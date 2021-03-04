@@ -14,7 +14,7 @@ class Attribute {
             javaType = 'Long'
         } else if (type.startsWith('smallint')) {
             javaType = 'Integer'
-        } else if (type.startsWith('nvarchar')) {
+        } else if (type.includes('varchar')) {
             javaType = 'String'
         }
 
