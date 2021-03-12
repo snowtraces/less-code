@@ -27,7 +27,7 @@ public class ${table.camelNameUpper}ServiceImpl implements ${table.camelNameUppe
     private ${table.camelNameUpper}DomainService ${table.camelName}DomainService;
 
     /**
-     * 实体对应表名，用于生成uuid
+     * 实体对应表名，用于生成ID
      */
     private static final String ${table.code}_TABLE_NAME = "${table.code}";
 

@@ -77,7 +77,23 @@
                     log(other.content)
                 })
 
-                // 5. 触发事件
+                // 5. bat脚本
+                let basePath = `C:/Users/snow/code/winning/6.0/winning-bmts-execution-report`
+                let packagePath = `/src/main/java/com/winning/bmts/execution/report`
+                let bat = `
+@echo off
+xcopy /S api ${basePath}/api${packagePath}/api
+xcopy /S dtos ${basePath}/api${packagePath}/dtos
+xcopy /S common ${basePath}/common${packagePath}/common
+xcopy /S domain ${basePath}/domain${packagePath}/domain
+xcopy /S persistence ${basePath}/persistence${packagePath}/persistence
+xcopy /S rest ${basePath}/rest${packagePath}/rest
+@echo on
+                `
+                let batFile = new TemplateFile('bat', 'copy.bat', [], bat)
+                fileList.push(batFile)
+
+                // 6. 触发事件
                 window.eventHub.emit('onCodeReady', fileList)
 
             })

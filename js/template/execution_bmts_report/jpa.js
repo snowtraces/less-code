@@ -37,7 +37,7 @@ public interface ${table.camelNameUpper}Jpa extends JpaRepository<${table.camelN
         "  where a.${table.camelPk} = :${table.camelPk}" +
         " and a.hospitalSOID = :hospitalSOID " +
         " and a.isDel=0")
-    ${table.camelNameUpper} findBy${table.camelPkUpper}(@Param("${table.camelPk}") Long ${table.camelPk}, @Param("hospitalSOIDs") Long hospitalSOID);
+    ${table.camelNameUpper} findBy${table.camelPkUpper}(@Param("${table.camelPk}") Long ${table.camelPk}, @Param("hospitalSOID") Long hospitalSOID);
 
 }    
     `

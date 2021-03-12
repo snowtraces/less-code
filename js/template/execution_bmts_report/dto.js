@@ -9,7 +9,7 @@ import java.util.Date;
 
 ${annotation}
 @Data
-@ApiModel(value = "${table.camelNameUpper}Dto", description = "危急值-危急值报告操作记录")
+@ApiModel(value = "${table.camelNameUpper}Dto", description = "危急值-${table.name}操作记录")
 public class ${table.camelNameUpper}Dto {
 ${table.attrTextSwagger}
 }
