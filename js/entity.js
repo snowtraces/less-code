@@ -16,6 +16,8 @@ class Attribute {
             javaType = 'Integer'
         } else if (type.includes('varchar')) {
             javaType = 'String'
+        } else if (type.includes('datetime')) {
+            javaType = 'Date'
         }
 
         if (!javaType) {

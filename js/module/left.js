@@ -82,12 +82,12 @@
                 let packagePath = `/src/main/java/com/winning/bmts/execution/report`
                 let bat = `
 @echo off
-xcopy /S api ${basePath}/api${packagePath}/api
-xcopy /S dtos ${basePath}/api${packagePath}/dtos
-xcopy /S common ${basePath}/common${packagePath}/common
-xcopy /S domain ${basePath}/domain${packagePath}/domain
-xcopy /S persistence ${basePath}/persistence${packagePath}/persistence
-xcopy /S rest ${basePath}/rest${packagePath}/rest
+xcopy /S api "${basePath}/api${packagePath}/api"
+xcopy /S dtos "${basePath}/api${packagePath}/dtos"
+xcopy /S common "${basePath}/common${packagePath}/common"
+xcopy /S domain "${basePath}/domain${packagePath}/domain"
+xcopy /S persistence "${basePath}/persistence${packagePath}/persistence"
+@REM xcopy /S rest "${basePath}/rest${packagePath}/rest
 @echo on
                 `
                 let batFile = new TemplateFile('bat', 'copy.bat', [], bat)
