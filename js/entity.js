@@ -11,12 +11,20 @@ class Attribute {
         // TODO javaType
         let javaType = null
         if (type.startsWith('numeric')) {
-            javaType = 'Long'
+            javaType = precision ? 'BigDecimal' : 'Long'
         } else if (type.startsWith('smallint')) {
             javaType = 'Integer'
         } else if (type.includes('varchar')) {
             javaType = 'String'
         } else if (type.includes('datetime')) {
+            javaType = 'Date'
+        } else if (type.includes('Number')) {
+            javaType = length == 19 ? 'Long' : 'Integer'
+        } else if (type.includes('Variable Multibyte')) {
+            javaType = 'String'
+        } else if (type.includes('Short Integer')) {
+            javaType = 'Integer'
+        } else if (type.includes('Date&time')) {
             javaType = 'Date'
         }
 
@@ -77,6 +85,45 @@ class Table {
             let camelNameUpper = $.firstUpperCase($.toCamelCase(this.code))
             this.ext.camelNameUpper = camelNameUpper
             return camelNameUpper
+        }
+    }
+
+    get shortCamelNameUpper() {
+        if (this.ext.shortCamelNameUpper) {
+            return this.ext.shortCamelNameUpper
+        } else {
+            let shortCamelNameUpper = $.firstUpperCase($.toCamelCase(this.code))
+            if (this.code.length > 16) {
+                let nameArr = this.code.split('_');
+                nameArr = nameArr.map(n => {
+                    if (n.length < 6) {
+                        return n
+                    } else if (n.length >= 6) {
+                        // 截取方案
+                        let yuan = ['a', 'e', 'i', 'o', 'u']
+                        if (!yuan.includes(n[2].toLowerCase())) {
+                            // 1. 前三个辅音结尾
+                            return n.substring(0, 3)
+                        } else {
+                            // // 2. 前三个辅音
+                            // let onlyFu = n.split('').filter(c => !yuan.includes(c.toLowerCase())).join('')
+                            // return onlyFu.length < 3 ? onlyFu : onlyFu.substring(0, 3)
+                            // 2. 第二个辅音结尾
+                            if (!yuan.includes(n[1].toLowerCase())) {
+                                // 1. 前三个辅音结尾
+                                return n.substring(0, 2)
+                            } else {
+                                return n.substring(0, 3)
+                            }
+                        }
+                    }
+                }).join('_')
+                shortCamelNameUpper = $.firstUpperCase($.toCamelCase(nameArr))
+            }
+
+
+            this.ext.shortCamelNameUpper = shortCamelNameUpper
+            return shortCamelNameUpper
         }
     }
 

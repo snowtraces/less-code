@@ -17,32 +17,8 @@
             KEY_SQL_DDL: 'SQL_DDL'
         },
         template: {
-            // path: './js/template/execution_mas/',
-            // path: './js/template/execution_bmts_order/',
             path: config.path,
-            needs: [
-                // 'po', 'service', 'serviceImpl', 'repository', 'queryRepository', 'queryRepositoryImpl',
-                // 'resultOutput', 'save_Input', 'delete_Input', 'query_Input', 'query_Output', 'updateEnabledFlag_Input',
-                // 'rpcService', 'endPointImpl', 'save_InputDTO', 'query_OutputDTO', 'query_InputDTO', 'delete_InputDTO',
-                // 'resultOutputDTO', 
-                // 'changeEnabledFlag_InputDTO'
-
-// 'deleteInputDto',
-// 'jpa',
-// 'po',
-// 'queryInputDto',
-// 'queryOutputDto',
-// 'repository',
-// 'repositoryImpl',
-// 'resultOutputDto',
-// 'rpcService',
-// 'rpcServiceImpl',
-// 'saveInputDto',
-// 'service',
-// 'serviceImpl',
-// 'vo'
-... config.needs
-            ]
+            needs: config.needs
         }
     }
 
@@ -100,6 +76,40 @@ xcopy /S persistence "${basePath}/persistence${packagePath}/persistence"
         },
         bindEventHub() {
         },
+        ge() {
+            let col = [
+                { idx: 0, pos: -1 },
+                { idx: 1, pos: 5, fun: (item) => item.innerText === '是' ? 'TRUE' : 'FALSE' },
+                { idx: 2, pos: 0, fun: (item) => item.innerText },
+                { idx: 3, pos: 1, fun: (item) => item.innerText },
+                { idx: 4, pos: 2, fun: (item) => item.innerText },
+                { idx: 5, pos: 3, fun: (item) => item.innerText },
+                { idx: 6, pos: 4, fun: (item) => item.innerText },
+                { idx: 7, pos: 7, fun: (item) => item.innerText === '是' ? 'TRUE' : 'FALSE' },
+            ]
+
+            // name, code, type, length, precision, primary, foreignKey, mandatory
+            // 0      1     2      3        4          5        6          7
+            let data = []
+            let rawArray = Array.from(document.querySelectorAll('#dynamicDataDiv > div'))
+                .map(d => Array.from(d.querySelectorAll('div')))
+                .map((x, idx) => {
+                    if (col[idx] && col[idx].pos !== -1) {
+                        x.map((item, i) => {
+                            data[i] = (data[i] || [null, null, null, null, null, null, null, null])
+                            data[i][col[idx].pos] = (col[idx].fun)(item)
+                        })
+                    }
+                })
+            console.log(data)
+
+            console.log(
+                '-- pdm\n' +
+                data[0][0].substring(0, data[0][0].length - 2) + '\t' +  data[0][1].substring(0, data[0][1].length - 3) + '\n' +
+                data.filter(line => !['IS_DEL', 'HOSPITAL_SOID', 'CREATED_AT', 'MODIFIED_AT'].includes(line[1]))
+                .map(line => line.join('\t')).join('\n')
+            )
+        },
         geOthers(table) {
             let others = []
 
@@ -110,11 +120,10 @@ xcopy /S persistence "${basePath}/persistence${packagePath}/persistence"
             ))
 
             // 2. api路径
-            let apis = { save: '保存', delete: '删除', by_example: '多条件查询'}
+            let apis = { save: '保存', delete: '删除', by_example: '多条件查询' }
             others.push(new Other(
                 'ApiPathConstants.java',
-                `${
-                    Object.keys(apis).map(apiCode => `/**
+                `${Object.keys(apis).map(apiCode => `/**
  * ${apis[apiCode]}${table.name}
  */
 public static final String ${apiCode === 'by_example' ? 'QUERY_' : ''}${apiCode.toUpperCase()}_${table.code}_V1 = "/api/v1/execution/${table.code.toLowerCase()}/${apiCode}";
@@ -270,7 +279,7 @@ public static final String ${apiCode === 'by_example' ? 'QUERY_' : ''}${apiCode.
                 let _line = line.trim()
                 if (idx === 1) {
                     // 第一行，表名
-                    let tableMeta = _line.split(' ')
+                    let tableMeta = _line.split('\t')
                     table.name = tableMeta[0]
                     table.code = tableMeta[1]
                 } else if (idx > 1) {

@@ -1,12 +1,6 @@
 const ge_service = (table) => {
     let template = `package ${base_package}.domain.service;
 
-import ${base_package}.dtos.${scope.RESOURCE}.${table.camelNameUpper}Dto;
-import ${base_package}.dtos.${scope.RESOURCE}.input.${table.camelNameUpper}DeleteInputDto;
-import ${base_package}.dtos.${scope.RESOURCE}.input.${table.camelNameUpper}InputDto;
-import ${base_package}.dtos.${scope.RESOURCE}.input.${table.camelNameUpper}QueryInputDto;
-import ${base_package}.dtos.output.MgtResult;
-
 import java.util.List;
 
 public interface ${table.camelNameUpper}Service {

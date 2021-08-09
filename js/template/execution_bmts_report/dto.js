@@ -1,5 +1,5 @@
 const ge_dto = (table) => {
-    let template = `package ${base_package}.dtos.criticalvalue;
+    let template = `package ${base_package}.api.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,8 +9,8 @@ import java.util.Date;
 
 ${annotation}
 @Data
-@ApiModel(value = "${table.camelNameUpper}Dto", description = "危急值-${table.name}操作记录")
-public class ${table.camelNameUpper}Dto {
+@ApiModel(value = "${table.camelNameUpper}OutputDTO", description = "${table.name}-出参")
+public class ${table.camelNameUpper}OutputDTO {
 ${table.attrTextSwagger}
 }
 `

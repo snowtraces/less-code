@@ -1,11 +1,10 @@
 const ge_po = (table) => {
-    let template = `package ${base_package}.persistence.entity.${scope.RESOURCE};
+    let template = `package ${base_package}.entity.${scope.RESOURCE};
 
-import ${base_package}.persistence.entity.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,7 @@ ${annotation}
 @NoArgsConstructor
 @Entity
 @Table(name = "${table.code}")
-public class ${table.camelNameUpper} extends BaseEntity {
+public class ${table.camelNameUpper}Entity extends BaseEntity {
 ${table.attrTextJpa}
 }
     `
